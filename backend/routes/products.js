@@ -1,10 +1,4 @@
-// const express = require('express')
-// const router = express.Router()
 
-// const {getAllProducts, getAllProductsStatic} = require('../controllers/products')
-
-// router.route('/').get(getAllProducts)
-// router.route('/static').get(getAllProductsStatic)
 
 
 // module.exports = router
@@ -65,7 +59,7 @@ router.put('/:id', verifyTokenandAdmin, async(req, res)=>{
 
 router.delete('/:id', verifyTokenandAdmin, async(req, res)=>{
     try{
-         await Product.findByIdAndDelete()
+         await Product.findByIdAndDelete(req.params.id)
         res.status(200).json("product has been deleted...")
     }catch(err){
         res.status(500).json(err)

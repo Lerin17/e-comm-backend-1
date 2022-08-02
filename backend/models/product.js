@@ -43,48 +43,6 @@ const mongoose = require('mongoose')
 // mongoose.connection.models
 console.log(mongoose.connection.models)
 
-// const newproductSchema =  new mongoose.Schema({
-//     name: {
-//         type:String,
-//         required:[true, 'product name must be provided'],
-//         unique:true
-//     },
-//     price: {
-//         type:Number,
-//         required:[true, 'product price must be provided']
-//     },
-//     description:{
-//     type:String
-//     },
-//     types: {
-//         type:Array,
-//         default:[]
-//     },
-//     colors: {
-//         type:Array,
-//         default:[]   
-//     },
-//     isNewArrival: {
-//         type:Boolean,
-//         default:false
-//     },
-//     image: {
-//         type:String,
-//     },
-//     alternate: {
-//         type:Array,
-//         required:true
-//     },
-//     letter: {
-//         type:String,
-//         required:true
-//     }
-
-
-
-// },{
-//     timestamps:true
-// }) 
 
 const productSchema = new mongoose.Schema({
     name: {
