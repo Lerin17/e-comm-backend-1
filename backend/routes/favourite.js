@@ -33,15 +33,45 @@ router.post('/:id', async(req, res)=>{
   
 })
 
-//remove product from favourites
-router.delete('/:id', async(req, res)=>{
-    try{
-        await Product.findByIdAndDelete()
-       res.status(200).json("product has been deleted...")
-   }catch(err){
-       res.status(500).json(err)
-   }
+//get all favourite products
+router.get('/', async (req, res) => {
+    try {
+        const allFavourite = await Favourite.find()
+        res.status(200).json(allFavourite)
+    } catch (err) {
+        res.status(500).json(err)
+    }
 })
+
+//remove a product from favourites
+router.delete('/:id', async(req, res)=>{
+   
+        try{
+            await Favourite.findByIdAndDelete(req.params.id)
+           res.status(200).json("product has been deleted...")
+       }catch(err){
+           res.status(500).json(err)
+       }
+
+  
+})
+
+//remove all products from favourites
+
+router.delete('/', async(req, res)=>{
+   
+        try{
+         await Favourite.deleteMany() 
+         res.status(200).json("all products have been deleted...")
+        }catch(err){
+            res.status(500).json(err)
+        }
+
+  
+})
+
+//remove all items, all products
+
 
 
 module.exports = router

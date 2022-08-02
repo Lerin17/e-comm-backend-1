@@ -51,6 +51,9 @@ const CartSchema = new mongoose.Schema({
             productID:{
                 type:String
             },
+            productDetails:{
+                type:Object
+            },
             quantity:{
                 type:Number,
                 default: 1
