@@ -76,6 +76,24 @@ router.post('/:userID/:productID', async (req,res)=>{
 
 })
 
+//get all favourites item from a user
+
+router.get('/:userID', async(req, res)=>{
+    const userid = req.params.userID
+
+    try {
+        const getuserFavourites = await UsersFavourites.find({'userID':userid})
+
+        res.status(200).json(getuserFavourites)
+
+        if(!getuserFavourites.length){
+            res.status(404).json('user not found')
+        }
+    } catch (error) {
+        res.status(500).json(error)
+    }
+})
+
 //delete items from user fav
 router.delete('/:userID/:productID', async (req, res)=>{
     const userid = req.params.userID

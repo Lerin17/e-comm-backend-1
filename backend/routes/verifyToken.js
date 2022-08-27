@@ -25,7 +25,7 @@ const verifyTokenandAuth = (req, res, next )=> {
         if(req.user.id === req.params.id || req.user.Adminrole){
             next()
         }else{
-            req.status(403).json('You do not have clearance for this operation')
+            res.status(403).json('You do not have clearance for this operation')
         }
     })
 }

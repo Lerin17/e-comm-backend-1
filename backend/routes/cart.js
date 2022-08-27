@@ -18,6 +18,7 @@ router.post('/:userID/:productID', async (req, res)=>{
 
     const userid = req.params.userID
     const productid = req.params.productID
+    const incrementby = req.body.incrementby
 
     try {
         const getUserCart = await Cart.find({'userID': userid})
@@ -29,7 +30,7 @@ router.post('/:userID/:productID', async (req, res)=>{
                 products: [
                     {productID: getProduct._id ,
                     productDetails: getProduct,
-                    quantity: 1}
+                    quantity: incrementby}
                 ]
             })
 
@@ -50,7 +51,8 @@ router.post('/:userID/:productID', async (req, res)=>{
                 const updatedCart = await Cart.findOneAndUpdate(
                     {'userID':userid},
                     {$push: {products:  {productID: getProduct._id ,
-                                        productDetails: getProduct}}},
+                                        productDetails: getProduct,
+                                        quantity: incrementby}}},
                     { new: true }
                 )
 
@@ -63,32 +65,6 @@ router.post('/:userID/:productID', async (req, res)=>{
     } catch (error) {
         res.status(500).json(error) 
     }
-
- 
-
-    // try {
-    //     const getProduct = await Product.findById(req.params.id)
-      
-    //     const newcarrtitem = new Cart({
-    //     name: getProduct.name,
-    //     price: getProduct.price,
-    //     description: getProduct.description,
-    //     type: getProduct.type,
-    //     color: getProduct.color,
-    //     image:getProduct.image,
-    //     imagearray:getProduct.imagearray,
-    //     alt:getProduct.alt,
-    //     productID:getProduct._id,
-    //     isNewArrival: req.body.isNewArrival
-    // })
-    
-    //         const savedcartitem = await newcarrtitem.save()
-    //         res.status(200).json(savedcartitem)
-    //     // const savedCart = await newCart.save()
-    //     // res.status(200).json(savedCart)
-    // } catch (error) {
-    //     res.status(500).json(error)
-    // }
     
 })
 
@@ -98,12 +74,14 @@ router.post('/:userID/:productID', async (req, res)=>{
 
     const userid = req.params.userID
     const productid = req.params.productID
+    const incrementby = req.body.incrementby
 
     try {
         
+        const getUserCart = await Cart.find({'userID': userid})
       
 
-        if(!myCart.length){
+        if(!getUserCart.length){
             return res.status(400).json({
                 error :"no user found"
             })
@@ -111,19 +89,62 @@ router.post('/:userID/:productID', async (req, res)=>{
             console.log('for all time')
         
 
-        const alteredProduct = await Cart.findOneAndUpdate({'userID': userid,
+        const alteredCartProduct = await Cart.findOneAndUpdate({'userID': userid,
         'products.productID': productid},
-        { $inc: {'products.$.quantity':  1}},
+        { $inc: {'products.$.quantity':  incrementby}},
         {new:true})
 
    
-            res.status(200).json(alteredProduct)
+            res.status(200).json(alteredCartProduct)
         }
 
     
     } catch (error) {
         res.status(500).json(error) 
     }
+})
+
+//delete an item from the cart
+
+router.delete('/:userID/:productID', async (req,res)=>{
+    const userid = req.params.userID
+    const productid = req.params.productID
+
+    try {
+        const getUserCart = await Cart.find({'userID': userid})
+
+        if(!getUserCart.length){
+            return res.status(400).json({
+                error :"no user found"
+            })
+        }else{
+            // console.log('for all time')
+        
+    
+        // const alteredCartProduct = await Cart.findOneAndUpdate({'userID': userid,
+        // 'products.productID': productid},
+        // { $inc: {'products.$.quantity':  1}},
+        // {new:true})
+
+        // console.log('damnx')
+    
+        const alteredCartProduct = await Cart.findOneAndUpdate (
+            // {'userID':userid},
+            // {'$pull': {'products': {'productID': productid}}},
+            // { new: true }
+            
+            {'userID':userid},
+            {$pull: {'products':{'productID': productid}}},
+            {new:true})
+    
+            res.status(200).json(alteredCartProduct)
+        }
+    
+
+    } catch (error) {
+        res.status(500).json(error)
+    }
+
 })
 
 
@@ -184,12 +205,18 @@ router.get('/', verifyTokenandAdmin, async (req, res) => {
 
 
 
-//get user cart
-router.get('/find/:userID', verifyTokenandAuth, async (req, res)=>{
+//get user cart  verifyTokenandAuth, 
+router.get('/find/:userID', async (req, res)=>{
+
+    const userid = req.params.userID
+
+    // console.log(userid)
 
     try {
-        const cart = await Cart.findOne({userID: req.params.userID})
-        res.status(200).json(cart)
+        const getUserCart = await Cart.find({'userID': userid})
+        console.log(getUserCart)
+        // const cart = await Cart.findOne({'userID': req.params.userID})
+        res.status(200).json(getUserCart)
     } catch (error) {
         res.status(500).json(error)
     }

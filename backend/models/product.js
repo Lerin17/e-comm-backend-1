@@ -88,9 +88,16 @@ const productSchema = new mongoose.Schema({
             altImages:{
                 type:Array,
                 default: []
+            },
+            altImagesHF: {
+                type:Array,
+                default: []
             }
         } 
-    ]
+    ],
+    imagearrayHF: {
+        type:Array,
+    }
 
 },{
     timestamps:true
